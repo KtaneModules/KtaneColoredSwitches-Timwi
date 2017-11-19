@@ -30,7 +30,7 @@ public class ColoredSwitchesModule : MonoBehaviour
     private bool _isSolved;
 
     private static T[] newArray<T>(params T[] array) { return array; }
-    private static Color[] _materialColors = "f65353|0fe325|5155f4|da6cf2|ffad0b|53d3ff".Split('|').Select(str => new Color(Convert.ToInt32(str.Substring(0, 2), 16) / 255f, Convert.ToInt32(str.Substring(2, 2), 16) / 255f, Convert.ToInt32(str.Substring(4, 2), 16) / 255f)).ToArray();
+    private static Color[] _materialColors = "c61e1e|21c032|5155f4|b91edb|ffad0b|53d3ff".Split('|').Select(str => new Color(Convert.ToInt32(str.Substring(0, 2), 16) / 255f, Convert.ToInt32(str.Substring(2, 2), 16) / 255f, Convert.ToInt32(str.Substring(4, 2), 16) / 255f)).ToArray();
     private const int _switchAngle = 55;
 
     class Transition { public SwitchColor Color; public int TransitionTo; }
