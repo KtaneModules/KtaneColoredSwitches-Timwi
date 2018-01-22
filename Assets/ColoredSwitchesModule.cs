@@ -197,6 +197,9 @@ public class ColoredSwitchesModule : MonoBehaviour
             yield break;
 
         yield return null;
+        
+        if (pieces.Skip(1).Count() > 20)
+            yield return "waiting music";
 
         foreach (var p in pieces.Skip(1))
         {
