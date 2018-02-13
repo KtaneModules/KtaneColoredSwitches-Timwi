@@ -190,15 +190,26 @@ public class ColoredSwitchesModule : MonoBehaviour
         _coroutines[i] = null;
     }
 
+    private static string[] _twitchCommands = { "toggle", "switch", "flip", "press" };
+
+#pragma warning disable 414
+    private string TwitchHelpMessage = @"Toggle switches with “!{0} 1 2 3 4”. (Optional “toggle/switch/flip/press” command allowed.)";
+#pragma warning restore 414
+
     private IEnumerator ProcessTwitchCommand(string command)
     {
         var pieces = command.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
-        if (pieces.Length < 2 || pieces[0] != "toggle" || pieces.Skip(1).Any(p => { int val; return !int.TryParse(p.Trim(), out val) || val < 1 || val > 5; }))
+
+        if (pieces.Length == 0)
+            yield break;
+        var skip = _twitchCommands.Contains(pieces[0]) ? 1 : 0;
+
+        if (pieces.Skip(skip).Any(p => { int val; return !int.TryParse(p.Trim(), out val) || val < 1 || val > 5; }))
             yield break;
 
         yield return null;
 
-        foreach (var p in pieces.Skip(1))
+        foreach (var p in pieces.Skip(skip))
         {
             var which = 5 - int.Parse(p.Trim());
             while (_coroutines[which] != null)
