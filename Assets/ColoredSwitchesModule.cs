@@ -30,12 +30,12 @@ public class ColoredSwitchesModule : MonoBehaviour
     private bool _isSolved;
 
     private static T[] newArray<T>(params T[] array) { return array; }
-    private static Color[] _materialColors = "c61e1e|21c032|5155f4|b91edb|ffad0b|53d3ff".Split('|').Select(str => new Color(Convert.ToInt32(str.Substring(0, 2), 16) / 255f, Convert.ToInt32(str.Substring(2, 2), 16) / 255f, Convert.ToInt32(str.Substring(4, 2), 16) / 255f)).ToArray();
+    private static readonly Color[] _materialColors = "c61e1e|21c032|2543ff|b91edb|ffad0b|53d3ff".Split('|').Select(str => new Color(Convert.ToInt32(str.Substring(0, 2), 16) / 255f, Convert.ToInt32(str.Substring(2, 2), 16) / 255f, Convert.ToInt32(str.Substring(4, 2), 16) / 255f)).ToArray();
     private const int _switchAngle = 55;
 
     class Transition { public SwitchColor Color; public int TransitionTo; }
 
-    private static Transition[][] _allowedTransitions = @"3>16|1>16|2>16|5>16|4>16|0>16
+    private static readonly Transition[][] _allowedTransitions = @"3>16|1>16|2>16|5>16|4>16|0>16
 5>5|2>5|3>5|4>5|0>5|1>5
 4>6|5>10|3>6|5>6|4>10|1>6|1>10|2>10|2>6|0>10|3>10|0>6
 4>7|5>7|3>7|0>7|2>7|1>2|2>2|1>7
@@ -208,8 +208,8 @@ public class ColoredSwitchesModule : MonoBehaviour
             yield break;
 
         yield return null;
-        
-        if (pieces.Skip(1).Count() > 20)
+
+        if (pieces.Length > 20)
             yield return "waiting music";
 
         foreach (var p in pieces.Skip(skip))
