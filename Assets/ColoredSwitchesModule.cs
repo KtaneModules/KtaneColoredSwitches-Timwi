@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ColoredSwitches;
+using Newtonsoft.Json;
 using UnityEngine;
 
 using Rnd = UnityEngine.Random;
@@ -19,6 +20,8 @@ public class ColoredSwitchesModule : MonoBehaviour
     public MeshRenderer[] LedsUp;
     public MeshRenderer[] LedsDown;
     public Material LedOn, LedOff;
+    public TextMesh[] ColorBlindIndicators;
+    public KMModSettings ModSettings;
 
     private static int _moduleIdCounter = 1;
     private int _moduleId;
@@ -90,6 +93,20 @@ public class ColoredSwitchesModule : MonoBehaviour
             LedsUp[i].material = LedOff;
             LedsDown[i].material = LedOff;
         }
+
+        try
+        {
+            var settings = JsonConvert.DeserializeObject<Dictionary<string, object>>(ModSettings.Settings);
+            if (settings != null && settings.ContainsKey("ColorBlindMode") && settings["ColorBlindMode"].Equals(true))
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    ColorBlindIndicators[i].text = _switchColors[i].ToString();
+                    ColorBlindIndicators[i].gameObject.SetActive(true);
+                }
+            }
+        }
+        catch { }
     }
 
     private KMSelectable.OnInteractHandler getToggler(int i)
