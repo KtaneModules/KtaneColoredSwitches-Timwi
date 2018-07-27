@@ -3994,4 +3994,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Settings: '{"ColorBlindMode":false}'
-  SettingsPath: 
+  SettingsPath: ColoredSwitches-settings.txt
