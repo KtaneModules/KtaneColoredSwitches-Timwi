@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 11489324}
   - component: {fileID: 11496072}
   - component: {fileID: 11489182}
-  - component: {fileID: 114688468870893062}
   - component: {fileID: 114365247261712050}
   m_Layer: 0
   m_Name: ColoredSwitchesModule
@@ -3993,17 +3992,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b24eab127680f5f4591b29fbde40c663, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _colorblindMode: 1
---- !u!114 &114688468870893062
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 127088}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: -289456416, guid: 45b809be76fd7a3468b6f517bced6f28, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Settings: '{"ColorBlindMode":false}'
-  SettingsPath: ColoredSwitches-settings.txt
+  _colorblindMode: 0
