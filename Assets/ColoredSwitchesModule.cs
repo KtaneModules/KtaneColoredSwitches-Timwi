@@ -21,7 +21,6 @@ public class ColoredSwitchesModule : MonoBehaviour
     public MeshRenderer[] LedsDown;
     public Material LedOn, LedOff;
     public TextMesh[] ColorBlindIndicators;
-    public KMModSettings ModSettings;
 
     private static int _moduleIdCounter = 1;
     private int _moduleId;
@@ -94,19 +93,14 @@ public class ColoredSwitchesModule : MonoBehaviour
             LedsDown[i].material = LedOff;
         }
 
-        try
+        if (GetComponent<KMColorblindMode>().ColorblindModeActive)
         {
-            var settings = JsonConvert.DeserializeObject<Dictionary<string, object>>(ModSettings.Settings);
-            if (settings != null && settings.ContainsKey("ColorBlindMode") && settings["ColorBlindMode"].Equals(true))
+            for (int i = 0; i < 5; i++)
             {
-                for (int i = 0; i < 5; i++)
-                {
-                    ColorBlindIndicators[i].text = _switchColors[i].ToString();
-                    ColorBlindIndicators[i].gameObject.SetActive(true);
-                }
+                ColorBlindIndicators[i].text = _switchColors[i].ToString();
+                ColorBlindIndicators[i].gameObject.SetActive(true);
             }
         }
-        catch { }
     }
 
     private KMSelectable.OnInteractHandler getToggler(int i)
