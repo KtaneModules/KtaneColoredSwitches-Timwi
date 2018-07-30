@@ -92,13 +92,10 @@ public class ColoredSwitchesModule : MonoBehaviour
             LedsDown[i].material = LedOff;
         }
 
-        if (GetComponent<KMColorblindMode>().ColorblindModeActive)
+        for (int i = 0; i < 5; i++)
         {
-            for (int i = 0; i < 5; i++)
-            {
-                ColorBlindIndicators[i].text = _switchColors[i].ToString();
-                ColorBlindIndicators[i].gameObject.SetActive(true);
-            }
+            ColorBlindIndicators[i].text = _switchColors[i].ToString();
+            ColorBlindIndicators[i].gameObject.SetActive(GetComponent<KMColorblindMode>().ColorblindModeActive);
         }
     }
 
@@ -203,15 +200,23 @@ public class ColoredSwitchesModule : MonoBehaviour
     private static string[] _twitchCommands = { "toggle", "switch", "flip", "press" };
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Toggle switches with “!{0} 1 2 3 4”. (Optional “toggle/switch/flip/press” command allowed.)";
+    private readonly string TwitchHelpMessage = @"Toggle switches with “!{0} 1 2 3 4”. (Optional “toggle/switch/flip/press” command allowed.) Use “!{0} colorblind” to show the colors of the switches.";
 #pragma warning restore 414
 
     private IEnumerator ProcessTwitchCommand(string command)
     {
         var pieces = command.Split(new[] { ' ', ',', ';' }, StringSplitOptions.RemoveEmptyEntries);
-
         if (pieces.Length == 0)
             yield break;
+
+        if (pieces.Length == 1 && pieces[0] == "colorblind")
+        {
+            yield return null;
+            for (int i = 0; i < 5; i++)
+                ColorBlindIndicators[i].gameObject.SetActive(true);
+            yield break;
+        }
+
         var skip = _twitchCommands.Contains(pieces[0]) ? 1 : 0;
 
         if (pieces.Skip(skip).Any(p => { int val; return !int.TryParse(p.Trim(), out val) || val < 1 || val > 5; }))
