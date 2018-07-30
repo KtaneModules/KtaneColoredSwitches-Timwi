@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using ColoredSwitches;
-using Newtonsoft.Json;
 using UnityEngine;
 
 using Rnd = UnityEngine.Random;
@@ -24,11 +23,11 @@ public class ColoredSwitchesModule : MonoBehaviour
 
     private static int _moduleIdCounter = 1;
     private int _moduleId;
-    private SwitchColor[] _switchColors = new SwitchColor[5];
+    private readonly SwitchColor[] _switchColors = new SwitchColor[5];
     private int _switchState;
     private int _solutionState = -1;
     private int _numInitialToggles;
-    private Coroutine[] _coroutines = new Coroutine[5];
+    private readonly Coroutine[] _coroutines = new Coroutine[5];
     private bool _isSolved;
 
     private static T[] newArray<T>(params T[] array) { return array; }
@@ -204,7 +203,7 @@ public class ColoredSwitchesModule : MonoBehaviour
     private static string[] _twitchCommands = { "toggle", "switch", "flip", "press" };
 
 #pragma warning disable 414
-    private string TwitchHelpMessage = @"Toggle switches with “!{0} 1 2 3 4”. (Optional “toggle/switch/flip/press” command allowed.)";
+    private readonly string TwitchHelpMessage = @"Toggle switches with “!{0} 1 2 3 4”. (Optional “toggle/switch/flip/press” command allowed.)";
 #pragma warning restore 414
 
     private IEnumerator ProcessTwitchCommand(string command)
