@@ -175,11 +175,6 @@ public class ColoredSwitchesModule : MonoBehaviour
         return _allowedTransitions[_switchState].Any(tr => tr.Color == _switchColors[i] && tr.TransitionTo == (_switchState ^ (1 << i)));
     }
 
-    private float easeOutSine(float time, float duration, float from, float to)
-    {
-        return (to - from) * Mathf.Sin(time / duration * (Mathf.PI / 2)) + from;
-    }
-
     private IEnumerator toggleSwitch(int i)
     {
         var switchFrom = (_switchState & (1 << i)) != 0 ? -_switchAngle : _switchAngle;
@@ -189,7 +184,7 @@ public class ColoredSwitchesModule : MonoBehaviour
 
         do
         {
-            Switches[i].transform.localEulerAngles = new Vector3(easeOutSine(Time.fixedTime - startTime, duration, switchFrom, switchTo), 0, 0);
+            Switches[i].transform.localEulerAngles = new Vector3(Easing.OutSine(Time.fixedTime - startTime, switchFrom, switchTo, duration), 0, 0);
             yield return null;
         }
         while (Time.fixedTime < startTime + duration);
