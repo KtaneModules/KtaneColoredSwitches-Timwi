@@ -231,4 +231,66 @@ public class ColoredSwitchesModule : MonoBehaviour
             yield return new WaitForSeconds(.25f);
         }
     }
+
+    IEnumerator TwitchHandleForcedSolve()
+    {
+        var switchStateChanges = new[] { 1, 2, 4, 8, 16 };
+
+        // If the LEDs have not yet come on, perform three valid toggles
+        while (_solutionState == -1)
+        {
+            var transition = _allowedTransitions[_switchState].FirstOrDefault(tr => tr.Color == _switchColors[Array.IndexOf(switchStateChanges, _switchState ^ tr.TransitionTo)]);
+            var i = Array.IndexOf(switchStateChanges, _switchState ^ transition.TransitionTo);
+            Switches[i].OnInteract();
+            yield return new WaitForSeconds(.1f);
+            while (_coroutines[i] != null)
+                yield return true;
+        }
+
+        // Breadth-first search
+        var already = new HashSet<int>();
+        var parents = new Dictionary<int, int>();
+        var q = new Queue<int>();
+        q.Enqueue(_switchState);
+
+        while (q.Count > 0)
+        {
+            var swState = q.Dequeue();
+            if (!already.Add(swState))
+                continue;
+            Debug.LogFormat(@"New switch state: {0}", swState);
+            if (swState == _solutionState)
+                goto found;
+
+            foreach (var transition in _allowedTransitions[swState])
+            {
+                if (transition.Color != _switchColors[Array.IndexOf(switchStateChanges, swState ^ transition.TransitionTo)])
+                    continue;
+                if (already.Contains(transition.TransitionTo))
+                    continue;
+                Debug.LogFormat(@"    — Can transition to: {0}", transition.TransitionTo);
+                q.Enqueue(transition.TransitionTo);
+                parents[transition.TransitionTo] = swState;
+            }
+        }
+
+        throw new Exception("There is a bug in this module’s auto-solve handler. Please contact Timwi about this.");
+
+        found:;
+        var path = new List<int>();
+        var state = _solutionState;
+        while (state != _switchState)
+        {
+            path.Add(Array.IndexOf(switchStateChanges, state ^ parents[state]));
+            state = parents[state];
+        }
+
+        for (var i = path.Count - 1; i >= 0; i--)
+        {
+            Switches[path[i]].OnInteract();
+            yield return new WaitForSeconds(.1f);
+            while (_coroutines[path[i]] != null)
+                yield return true;
+        }
+    }
 }
