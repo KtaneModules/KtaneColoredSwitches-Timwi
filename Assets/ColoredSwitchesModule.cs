@@ -258,7 +258,6 @@ public class ColoredSwitchesModule : MonoBehaviour
             var swState = q.Dequeue();
             if (!already.Add(swState))
                 continue;
-            Debug.LogFormat(@"New switch state: {0}", swState);
             if (swState == _solutionState)
                 goto found;
 
@@ -268,7 +267,6 @@ public class ColoredSwitchesModule : MonoBehaviour
                     continue;
                 if (already.Contains(transition.TransitionTo))
                     continue;
-                Debug.LogFormat(@"    — Can transition to: {0}", transition.TransitionTo);
                 q.Enqueue(transition.TransitionTo);
                 parents[transition.TransitionTo] = swState;
             }
@@ -276,7 +274,7 @@ public class ColoredSwitchesModule : MonoBehaviour
 
         throw new Exception("There is a bug in this module’s auto-solve handler. Please contact Timwi about this.");
 
-        found:;
+        found:
         var path = new List<int>();
         var state = _solutionState;
         while (state != _switchState)
