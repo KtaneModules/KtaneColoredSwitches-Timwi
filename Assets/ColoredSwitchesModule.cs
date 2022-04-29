@@ -29,6 +29,7 @@ public class ColoredSwitchesModule : MonoBehaviour
     private int _numInitialToggles;
     private readonly Coroutine[] _coroutines = new Coroutine[5];
     private bool _isSolved;
+    private bool _colorblind;
 
     private static T[] newArray<T>(params T[] array) { return array; }
     private static readonly Color[] _materialColors = "c61e1e|21c032|2543ff|b91edb|ffad0b|53d3ff".Split('|').Select(str => new Color(Convert.ToInt32(str.Substring(0, 2), 16) / 255f, Convert.ToInt32(str.Substring(2, 2), 16) / 255f, Convert.ToInt32(str.Substring(4, 2), 16) / 255f)).ToArray();
@@ -92,10 +93,11 @@ public class ColoredSwitchesModule : MonoBehaviour
             LedsDown[i].material = LedOff;
         }
 
+        _colorblind = GetComponent<KMColorblindMode>().ColorblindModeActive;
         for (int i = 0; i < 5; i++)
         {
             ColorBlindIndicators[i].text = _switchColors[i].ToString();
-            ColorBlindIndicators[i].gameObject.SetActive(GetComponent<KMColorblindMode>().ColorblindModeActive);
+            ColorBlindIndicators[i].gameObject.SetActive(_colorblind);
         }
     }
 
@@ -195,7 +197,7 @@ public class ColoredSwitchesModule : MonoBehaviour
     private static string[] _twitchCommands = { "toggle", "switch", "flip", "press" };
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Toggle switches with “!{0} 1 2 3 4”. (Optional “toggle/switch/flip/press” command allowed.) Use “!{0} colorblind” to show the colors of the switches.";
+    private readonly string TwitchHelpMessage = @"!{0} 1 2 3 4 [toggle switches; numbered left to right] | !{0} colorblind";
 #pragma warning restore 414
 
     private IEnumerator ProcessTwitchCommand(string command)
@@ -207,8 +209,9 @@ public class ColoredSwitchesModule : MonoBehaviour
         if (pieces.Length == 1 && pieces[0] == "colorblind")
         {
             yield return null;
+            _colorblind = !_colorblind;
             for (int i = 0; i < 5; i++)
-                ColorBlindIndicators[i].gameObject.SetActive(true);
+                ColorBlindIndicators[i].gameObject.SetActive(_colorblind);
             yield break;
         }
 
